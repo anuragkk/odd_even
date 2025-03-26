@@ -19,7 +19,10 @@ if height >= 120:
 
     wants_photo = input("Do you like to have a photo taken")
     if wants_photo == "y":
-        bill += 3
+        if 45 <= age <= 55:
+            bill += 0
+        else:
+            bill += 3
 
     print(f"your final bill is {bill}$")
 
