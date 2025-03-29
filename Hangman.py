@@ -1,6 +1,8 @@
-print("Welcome to HANGMAN")
 import random
 
+print("Welcome to HANGMAN")
+
+# Word bank
 words = [
     "python", "developer", "hangman", "challenge", "variable",
     "function", "keyboard", "monitor", "internet", "hardware",
@@ -10,17 +12,32 @@ words = [
     "iteration", "recursion", "encryption", "framework", "automation"
 ]
 
+# Choose a random word
 random_word = random.choice(words)
-# print(random_word)  # Uncomment for debugging
-
-lives = len(random_word)
-spaces_to_fill = ["_"] * len(random_word)
+lives = len(random_word)  # Default lives based on word length
+spaces_to_fill = ["_"] * len(random_word)  # Hidden word representation
 guessed_letters = set()
 
-print(" ".join(spaces_to_fill))
+# Select difficulty level
+level_selected = input("Please choose your level (easy/medium/hard): ").lower()
 
+if level_selected == "easy":
+    spaces_to_fill[0] = random_word[0]  # Reveal first letter
+    spaces_to_fill[-1] = random_word[-1]  # Reveal last letter
+    lives += 2  # Extra lives for easy mode
+
+elif level_selected == "medium":
+    random_index = random.randint(1, len(random_word) - 2)  # Pick a random position (not first or last)
+    spaces_to_fill[random_index] = random_word[random_index]  # Auto-fill one random letter
+
+elif level_selected == "hard":
+    lives -= 2  # Reduce lives for hard mode
+
+print("\n" + " ".join(spaces_to_fill))
+
+# Game loop
 while "_" in spaces_to_fill and lives > 0:
-    response = input("Please guess a letter: ").lower()
+    response = input("\nPlease guess a letter: ").lower()
 
     # Validate input
     if len(response) != 1 or not response.isalpha():
@@ -33,8 +50,9 @@ while "_" in spaces_to_fill and lives > 0:
 
     guessed_letters.add(response)
 
+    # Check if guessed letter is in the word
     if response in random_word:
-        for i in range(len(random_word)):  # Loop using range instead of enumerate
+        for i in range(len(random_word)):
             if random_word[i] == response:
                 spaces_to_fill[i] = response
     else:
@@ -43,6 +61,7 @@ while "_" in spaces_to_fill and lives > 0:
 
     print(" ".join(spaces_to_fill))
 
+# Check game outcome
 if "_" not in spaces_to_fill:
     print("\n🎉 Congratulations! You guessed the word!")
 else:
